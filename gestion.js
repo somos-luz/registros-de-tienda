@@ -1,39 +1,36 @@
-// La URL de Sheet Monkey para conectar con tu hoja de cálculo
+// --- Configuración Global ---
+// Pega aquí la URL de tu aplicación web de Apps Script
 const URL_DEL_SCRIPT = "https://script.google.com/macros/s/AKfycbyaeYOs9xAVjFSObEiYfOp1DlEkZqTffmxNMkT4iuTYWTggIKNtddrnaUZ5gXFLtX29jA/exec";
-// --- FUNCIONES PARA ENVIAR DATOS A GOOGLE SHEETS ---
 
-// Función para enviar datos a la pestaña "Ventas"
-async function registrarVenta(datosVenta) {
-    const response = await fetch(SHEET_MONKEY_URL + "?append=true", {
-        method: "POST",
-        body: JSON.stringify(datosVenta),
-        headers: {
-            "Content-Type": "application/json",
-        },
+// --- Lógica de navegación entre pestañas ---
+const tabLinks = document.querySelectorAll('.tab-link');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        const targetTab = link.getAttribute('data-tab');
+        
+        tabLinks.forEach(tab => tab.classList.remove('active'));
+        link.classList.add('active');
+
+        tabContents.forEach(content => content.classList.remove('active'));
+        document.getElementById(targetTab).classList.add('active');
     });
-    return response.ok;
-}
+});
 
-// Función para enviar datos a la pestaña "Inventario"
-async function registrarInventario(datosInventario) {
-    const response = await fetch(SHEET_MONKEY_URL + "?append=true", {
-        method: "POST",
-        body: JSON.stringify(datosInventario),
-        headers: {
-            "Content-Type": "application/json",
-        },
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.tab-link').click();
+});
+
+// --- Función para enviar datos a Google Sheets ---
+async function enviarDatos(datos) {
+    const params = new URLSearchParams({
+        data: JSON.stringify(datos)
     });
-    return response.ok;
-}
 
-// Función para enviar datos a la pestaña "Gastos"
-async function registrarGasto(datosGasto) {
-    const response = await fetch(SHEET_MONKEY_URL + "?append=true", {
+    const response = await fetch(URL_DEL_SCRIPT, {
         method: "POST",
-        body: JSON.stringify(datosGasto),
-        headers: {
-            "Content-Type": "application/json",
-        },
+        body: params,
     });
     return response.ok;
 }
@@ -42,9 +39,9 @@ async function registrarGasto(datosGasto) {
 const ventasForm = document.getElementById('ventas-form');
 
 ventasForm.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Evita que la página se recargue
+    e.preventDefault();
 
-   const ventaData = {
+    const ventaData = {
         formName: "Ventas",
         fecha: document.getElementById('venta-fecha').value,
         cliente: document.getElementById('venta-cliente').value,
@@ -52,17 +49,14 @@ ventasForm.addEventListener('submit', async (e) => {
         cantidad: parseInt(document.getElementById('venta-cantidad').value),
         precio: parseInt(document.getElementById('venta-precio').value),
         metodoPago: document.getElementById('venta-metodo').value,
-        // Agregamos este campo para el ID de venta
         idVenta: new Date().getTime(),
-        // Agregamos este parámetro para que la venta se guarde al final
     };
 
-    // Envía los datos a Google Sheets
-    const success = await registrarVenta(ventaData);
+    const success = await enviarDatos(ventaData);
 
     if (success) {
         alert("¡Venta registrada con éxito!");
-        ventasForm.reset(); // Limpia el formulario
+        ventasForm.reset();
     } else {
         alert("Ocurrió un error al registrar la venta. Por favor, inténtalo de nuevo.");
     }
@@ -81,7 +75,7 @@ gastosForm.addEventListener('submit', async (e) => {
         monto: parseInt(document.getElementById('gasto-monto').value),
     };
 
-    const success = await registrarGasto(gastoData);
+    const success = await enviarDatos(gastoData);
 
     if (success) {
         alert("¡Gasto registrado con éxito!");
@@ -90,6 +84,7 @@ gastosForm.addEventListener('submit', async (e) => {
         alert("Ocurrió un error al registrar el gasto. Por favor, inténtalo de nuevo.");
     }
 });
+
 // --- Lógica del formulario de inventario ---
 const inventarioForm = document.getElementById('inventario-form');
 
@@ -104,7 +99,7 @@ inventarioForm.addEventListener('submit', async (e) => {
         costoUnitario: parseInt(document.getElementById('inventario-costo-unitario').value),
     };
 
-    const success = await registrarInventario(inventarioData);
+    const success = await enviarDatos(inventarioData);
 
     if (success) {
         alert("¡Inventario actualizado con éxito!");
@@ -112,5 +107,4 @@ inventarioForm.addEventListener('submit', async (e) => {
     } else {
         alert("Ocurrió un error al actualizar el inventario. Por favor, inténtalo de nuevo.");
     }
-
 });
