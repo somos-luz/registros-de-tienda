@@ -1,6 +1,5 @@
 // La URL de Sheet Monkey para conectar con tu hoja de cálculo
-const SHEET_MONKEY_URL = "https://api.sheetmonkey.io/form/nbiUP3mQyqn5Hi8MWPHxLZ";
-
+const URL_DEL_SCRIPT = "https://script.google.com/macros/s/AKfycbyaeYOs9xAVjFSObEiYfOp1DlEkZqTffmxNMkT4iuTYWTggIKNtddrnaUZ5gXFLtX29jA/exec";
 // --- FUNCIONES PARA ENVIAR DATOS A GOOGLE SHEETS ---
 
 // Función para enviar datos a la pestaña "Ventas"
@@ -113,4 +112,5 @@ inventarioForm.addEventListener('submit', async (e) => {
     } else {
         alert("Ocurrió un error al actualizar el inventario. Por favor, inténtalo de nuevo.");
     }
+
 });
