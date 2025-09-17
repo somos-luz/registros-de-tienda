@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Tienda Somos Luz</title>
+    <link rel="stylesheet" href="gestion.css">
+</head>
+<body>
+
+    <header>
+        <h1>Gestión de Tienda Somos Luz</h1>
+    </header>
+
+    <main>
+        <div class="tabs">
+            <button class="tab-button active" data-tab="ventas">Ventas</button>
+            <button class="tab-button" data-tab="inventario">Inventario</button>
+            <button class="tab-button" data-tab="gastos">Gastos</button>
+            <button class="tab-button" data-tab="reportes">Reportes</button>
+        </div>
+
+        <div id="ventas" class="tab-content active">
+            <h2>Registrar Venta</h2>
+            <form id="ventas-form">
+                <label for="venta-fecha">Fecha:</label>
+                <input type="date" id="venta-fecha" required>
+
+                <label for="venta-cliente">Cliente:</label>
+                <input type="text" id="venta-cliente" placeholder="Nombre del cliente" required>
+
+                <label for="venta-producto">Producto/Servicio:</label>
+                <input type="text" id="venta-producto" placeholder="Nombre del producto o servicio" required>
+
+                <label for="venta-cantidad">Cantidad:</label>
+                <input type="number" id="venta-cantidad" placeholder="1" value="1" required>
+
+                <label for="venta-precio">Precio total:</label>
+                <input type="number" id="venta-precio" placeholder="$" required>
+
+                <label for="venta-metodo">Método de pago:</label>
+                <select id="venta-metodo" required>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="transferencia">Transferencia</option>
+                </select>
+
+                <button type="submit">Registrar Venta</button>
+            </form>
+        </div>
+
+        <div id="inventario" class="tab-content hidden">
+        <h2>Gestionar Inventario</h2>
+        <form id="inventario-form">
+            <label for="inventario-nombre">Nombre del producto:</label>
+            <input type="text" id="inventario-nombre" placeholder="Ej: Incienso de salvia" required>
+
+            <label for="inventario-tipo">Tipo:</label>
+            <input type="text" id="inventario-tipo" placeholder="Ej: Esotérico, Artesanía, etc." required>
+
+            <label for="inventario-stock">Stock:</label>
+            <input type="number" id="inventario-stock" placeholder="10" required>
+
+            <label for="inventario-costo-unitario">Costo unitario:</label>
+            <input type="number" id="inventario-costo-unitario" placeholder="$" required>
+
+            <button type="submit">Actualizar Inventario</button>
+        </form>
+    </div>
+
+        <div id="gastos" class="tab-content hidden">
+        <h2>Registrar Gasto</h2>
+        <form id="gastos-form">
+            <label for="gasto-fecha">Fecha:</label>
+            <input type="date" id="gasto-fecha" required>
+
+            <label for="gasto-descripcion">Descripción:</label>
+            <input type="text" id="gasto-descripcion" placeholder="Ej: Materiales, Publicidad, etc." required>
+
+            <label for="gasto-monto">Monto:</label>
+            <input type="number" id="gasto-monto" placeholder="$" required>
+
+            <button type="submit">Registrar Gasto</button>
+        </form>
+    </div>
+
+        <div id="reportes" class="tab-content hidden">
+            <h2>Reportes Financieros</h2>
+            <p>Contenido de reportes</p>
+        </div>
+    </main>
+
+    <script src="gestion.js"></script>
+    <script>
+        // Lógica para cambiar de pestañas
+        const tabs = document.querySelectorAll('.tab-button');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                contents.forEach(c => c.classList.add('hidden'));
+                document.getElementById(targetTab).classList.remove('hidden');
+            });
+        });
+
+        // Configurar la fecha actual en el campo de ventas
+        document.getElementById('venta-fecha').valueAsDate = new Date();
+    </script>
+</body>
+</html>
